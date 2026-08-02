@@ -409,22 +409,22 @@ When someone lacks this specific brand of EQ, they treat aleatoric social noise 
 They try to debate an irrational person. They try to micromanage a chaotic environment. In machine learning terms, they are overfitting to noise. They exhaust their learning rate (η), burn their social capital, and drive themselves into a state of burnout, all while the underlying variance remains completely unchanged.
 High EQ is essentially having a highly calibrated internal GARCH model: it accurately predicts the expected variance of the humans around you, so you know exactly when to step in and update the weights, and when to just let the noise pass through the system.</p>
 <span class="speaker">OpenAI (GPT)</span>
-<p>I think this is one of the stronger insights in that conversation, but I'd sharpen it in one important way.
-
-The distinction between aleatoric and epistemic uncertainty is normative: it tells you what kind of intervention is appropriate. Emotional intelligence is, in part, the ability to estimate which kind of uncertainty you're facing before spending scarce resources.
-
-I'd write the mapping like this:
-Domain | Epistemic | Aleatoric | Correct Response
-Statistics | Model is wrong | World is noisy | Update model vs. estimate variance
-ML | Underfitting | Irreducible error | Learn vs. regularize
-GARCH | Structural break | Volatility clustering | Change model vs. widen confidence interval
-Relationships | Misunderstanding | Personality/randomness | Clarify vs. let go
-Politics | Persuadable disagreement | Coalition dynamics | Negotiate vs. conserve capital
-Leadership | Trainable employee | Unchangeable constraints | Coach vs. redesign system
-
-The last two columns are really about resource allocation.
-
-GARCH is more subtle than Gemini implies. I would modify one sentence: "When a spike in error violates the GARCH bounds, the system has encountered an aleatoric shock..." Not necessarily. GARCH is actually modeling conditional variance:
+<p>I think this is one of the stronger insights in that conversation, but I'd sharpen it in one important way.</p>
+<p>The distinction between aleatoric and epistemic uncertainty is normative: it tells you what kind of intervention is appropriate. Emotional intelligence is, in part, the ability to estimate which kind of uncertainty you're facing before spending scarce resources.</p>
+<p>I'd write the mapping like this:</p>
+<table>
+<thead><tr><th>Domain</th><th>Epistemic</th><th>Aleatoric</th><th>Correct Response</th></tr></thead>
+<tbody>
+<tr><td>Statistics</td><td class="dim">Model is wrong</td><td class="dim">World is noisy</td><td class="dim">Update model vs. estimate variance</td></tr>
+<tr><td>ML</td><td class="dim">Underfitting</td><td class="dim">Irreducible error</td><td class="dim">Learn vs. regularize</td></tr>
+<tr><td>GARCH</td><td class="dim">Structural break</td><td class="dim">Volatility clustering</td><td class="dim">Change model vs. widen confidence interval</td></tr>
+<tr><td>Relationships</td><td class="dim">Misunderstanding</td><td class="dim">Personality/randomness</td><td class="dim">Clarify vs. let go</td></tr>
+<tr><td>Politics</td><td class="dim">Persuadable disagreement</td><td class="dim">Coalition dynamics</td><td class="dim">Negotiate vs. conserve capital</td></tr>
+<tr><td>Leadership</td><td class="dim">Trainable employee</td><td class="dim">Unchangeable constraints</td><td class="dim">Coach vs. redesign system</td></tr>
+</tbody>
+</table>
+<p>The last two columns are really about resource allocation.</p>
+<p>GARCH is more subtle than Gemini implies. I would modify one sentence: "When a spike in error violates the GARCH bounds, the system has encountered an aleatoric shock..." Not necessarily. GARCH is actually modeling conditional variance:
 σ_t² = ω + α·ε_(t-1)² + β·σ_(t-1)²
 Large residuals increase the expected future volatility. That means GARCH is saying "The world has become less predictable." It is not saying "The model is wrong." Those are different.
 
