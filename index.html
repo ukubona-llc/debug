@@ -1,1 +1,581 @@
-.
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Institutional Allodynia — A Pentadic Threshold Model</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2312141C'/%3E%3Cpath d='M50 8 L61 40 L95 40 L67 60 L78 92 L50 72 L22 92 L33 60 L5 40 L39 40 Z' fill='none' stroke='%23C08A2E' stroke-width='4'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --ink-dark: #0E1016;
+    --panel-dark: #171A24;
+    --panel-dark-2: #1F2330;
+    --parchment: #EDE6D6;
+    --panel-light: #F7F3E9;
+    --panel-light-2: #FFFFFF;
+    --ochre: #C08A2E;
+    --ochre-dim: #8A6420;
+    --teal: #3E8E8A;
+    --crimson: #9C3B3B;
+    --line-dark: rgba(237,230,214,0.14);
+    --line-light: rgba(20,20,20,0.12);
+    --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-mono: 'SF Mono', 'IBM Plex Mono', Consolas, monospace;
+  }
+
+  [data-theme="dark"] {
+    --bg: var(--ink-dark);
+    --panel: var(--panel-dark);
+    --panel-2: var(--panel-dark-2);
+    --text: var(--parchment);
+    --text-dim: rgba(237,230,214,0.62);
+    --line: var(--line-dark);
+    --accent: var(--ochre);
+  }
+  [data-theme="light"] {
+    --bg: var(--panel-light);
+    --panel: var(--panel-light-2);
+    --panel-2: #F1EADA;
+    --text: #1B1B18;
+    --text-dim: rgba(27,27,24,0.62);
+    --line: var(--line-light);
+    --accent: var(--ochre-dim);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    transition: background 0.4s ease, color 0.4s ease;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  /* ---------- HEADER ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .logo-spin {
+    width: 46px; height: 46px;
+    animation: spin 18s linear infinite;
+    flex-shrink: 0;
+  }
+  @media (prefers-reduced-motion: reduce) { .logo-spin { animation: none; } }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .brand-text h1 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin: 0;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+  }
+  .brand-text p {
+    margin: 2px 0 0;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .toggle-btn {
+    width: 52px; height: 28px;
+    border-radius: 20px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: left 0.25s ease;
+  }
+  [data-theme="light"] .toggle-knob { left: 27px; }
+
+  /* ---------- WAFFLE GRID (app launcher, not tabs) ---------- */
+  .waffle {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .waffle-cell {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 12px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    font-family: var(--font-body);
+    transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 96px;
+  }
+  .waffle-cell:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .waffle-cell.active {
+    border-color: var(--accent);
+    background: var(--panel-2);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  .waffle-cell .phase-glyph {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .waffle-cell .phase-name {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 600;
+  }
+  .waffle-cell .phase-sub {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 780px) {
+    .waffle { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- PANELS ---------- */
+  .panel {
+    display: none;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 30px 32px;
+    animation: fade 0.35s ease;
+  }
+  .panel.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .panel h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+  }
+  .panel .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .panel p { line-height: 1.65; color: var(--text-dim); font-size: 0.95rem; }
+  .panel p strong { color: var(--text); }
+
+  .formula-box {
+    font-family: var(--font-mono);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 18px 0;
+    font-size: 0.95rem;
+    color: var(--text);
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.86rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  td.dim { color: var(--text-dim); }
+
+  .node-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .node {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .node .n-idx { font-family: var(--font-mono); color: var(--accent); font-size: 0.72rem; }
+  .node h4 { margin: 6px 0 4px; font-size: 0.85rem; font-family: var(--font-display); }
+  .node p { font-size: 0.78rem; margin: 0; }
+  @media (max-width: 900px) { .node-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- Verbatim / Lossy toggle ---------- */
+  .fidelity-switch {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0 4px;
+  }
+  .fidelity-btn {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .fidelity-btn.active { border-color: var(--accent); color: var(--accent); background: var(--panel); }
+  .fidelity-panel {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    background: var(--panel-2);
+    margin-top: 10px;
+  }
+  .fidelity-panel .tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .fidelity-panel blockquote {
+    margin: 0 0 10px;
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .fidelity-panel .attr {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+  .fidelity-panel .lossy-text {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  figure { margin: 24px 0 8px; }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <svg class="logo-spin" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.4"/>
+        <path d="M50 8 L61 40 L95 40 L67 60 L78 92 L50 72 L22 92 L33 60 L5 40 L39 40 Z"
+              fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Institutional Allodynia</h1>
+        <p>Okubala si Kulaba · Pentadic Threshold Model</p>
+      </div>
+    </div>
+    <div class="theme-toggle">
+      <span id="theme-label">Dark</span>
+      <button class="toggle-btn" id="themeBtn" aria-label="Toggle light and dark mode">
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- WAFFLE / APP GRID — replaces tabs -->
+  <nav class="waffle" id="waffle">
+    <button class="waffle-cell active" data-panel="p1">
+      <span class="phase-glyph">TENSOR</span>
+      <span class="phase-name">Sensation</span>
+      <span class="phase-sub">Thesis &amp; framing</span>
+    </button>
+    <button class="waffle-cell" data-panel="p2">
+      <span class="phase-glyph">MATRIX</span>
+      <span class="phase-name">Attention</span>
+      <span class="phase-sub">Threshold equation</span>
+    </button>
+    <button class="waffle-cell" data-panel="p3">
+      <span class="phase-glyph">VECTOR</span>
+      <span class="phase-name">Intention</span>
+      <span class="phase-sub">Institutional cases</span>
+    </button>
+    <button class="waffle-cell" data-panel="p4">
+      <span class="phase-glyph">EIGENMODE</span>
+      <span class="phase-name">Reaction</span>
+      <span class="phase-sub">Five mechanisms</span>
+    </button>
+    <button class="waffle-cell" data-panel="p5">
+      <span class="phase-glyph">SCALAR</span>
+      <span class="phase-name">Action</span>
+      <span class="phase-sub">Clinical correlate</span>
+    </button>
+  </nav>
+
+  <!-- PANEL 1 — SENSATION -->
+  <section class="panel active" id="p1">
+    <span class="eyebrow">Tensor → Sensation</span>
+    <h2>Ordinary variance, mistaken for threat</h2>
+    <p>An institution's nociceptive threshold can drift downward the same way a nervous system's can. <strong>Institutional allodynia</strong> is the condition in which routine disagreement, minor budget shortfall, or ordinary personnel turnover is processed as an existential emergency — triggering the resource-allocation switch that should be reserved for genuine threats to survival.</p>
+    <p>The distinction that matters is not whether a disturbance occurred, but whether it exceeds <strong>expected variance</strong> — the institution's own learned model of normal turbulence. A healthy system distinguishes <em>signal</em> from <em>noise</em>. A sensitized one has forgotten what noise sounds like.</p>
+    <p>Every stimulus, in other words, produces two very different objective functions depending on which mode is active: <strong>maximize long-run efficiency</strong> (normal operation) versus <strong>guarantee immediate survival</strong> (existential mode). The label "existential" is what flips the switch — and that label can be applied correctly or falsely.</p>
+  </section>
+
+  <!-- PANEL 2 — ATTENTION -->
+  <section class="panel" id="p2">
+    <span class="eyebrow">Matrix → Attention</span>
+    <h2>The escalation threshold</h2>
+    <p>An institution — like a nervous system — implicitly runs a volatility model. Escalation from ordinary adaptation to emergency mode is warranted only when the observed mismatch clears a learned threshold, τ:</p>
+    <div class="formula-box">
+      Escalate&nbsp;if&nbsp;&nbsp;&nbsp;( Observed Mismatch / Expected Variance )&nbsp;&nbsp;&gt;&nbsp;&nbsp;τ
+      <br><br>
+      where Expected Variance is the institution's own "GARCH" — its learned estimate of normal turbulence,
+      <br>and τ is the threshold for invoking emergency powers or committing extraordinary resources.
+    </div>
+    <p>Sensitization is what happens when the denominator collapses toward zero: every residual then appears enormous, and low-grade stimuli begin tripping high-grade responses.</p>
+    <table>
+      <thead><tr><th>Pain physiology</th><th>Institutional analogue</th></tr></thead>
+      <tbody>
+        <tr><td>Innocuous touch</td><td class="dim">Minor disagreement</td></tr>
+        <tr><td>Nociceptor sensitization</td><td class="dim">Bureaucratic hypersensitivity</td></tr>
+        <tr><td>Chronic inflammation</td><td class="dim">Chronic crisis mode</td></tr>
+        <tr><td>Central sensitization</td><td class="dim">Organization-wide threat inflation</td></tr>
+        <tr><td>Pain without injury</td><td class="dim">Emergency without existential danger</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PANEL 3 — INTENTION -->
+  <section class="panel" id="p3">
+    <span class="eyebrow">Vector → Intention</span>
+    <h2>Institutions that spent selectively, not uniformly</h2>
+    <p>Durable institutions survived not by avoiding mistakes but by developing mechanisms that treated most disturbances as adaptable noise, reserving scarce resources — capital, human talent, legitimacy, attention, political capital, optionality — for genuine threats.</p>
+    <table>
+      <thead><tr><th>Institution</th><th>Adaptation</th><th>Resource conserved</th></tr></thead>
+      <tbody>
+        <tr><td>Roman Empire</td><td class="dim">Incorporated former enemies via citizenship rather than annihilation</td><td class="dim">Military capital</td></tr>
+        <tr><td>Catholic Church</td><td class="dim">Separated negotiable doctrine from essential core across centuries</td><td class="dim">Legitimacy / continuity</td></tr>
+        <tr><td>University of Bologna</td><td class="dim">Distributed governance and patronage rather than tying to one ruler</td><td class="dim">Optionality</td></tr>
+        <tr><td>British Monarchy</td><td class="dim">Ceded powers no longer worth defending</td><td class="dim">Political capital</td></tr>
+      </tbody>
+    </table>
+    <p>Each case is the same move at different scale: partition reality into a <strong>core</strong> that must be defended and a <strong>periphery</strong> that can adapt — so that no single perturbation propagates into the institution's deepest identity.</p>
+  </section>
+
+  <!-- PANEL 4 — REACTION -->
+  <section class="panel" id="p4">
+    <span class="eyebrow">Eigenmode → Reaction</span>
+    <h2>Five mechanisms of institutional sensitization</h2>
+    <p>How does an ancient, once-resilient system end up with a pathologically low threshold?</p>
+    <div class="node-grid">
+      <div class="node">
+        <span class="n-idx">01</span>
+        <h4>Success changes the training data</h4>
+        <p>Young institutions are selected by reality; old ones by memory. A survived catastrophe becomes an inherited scar — the threshold never fully resets.</p>
+      </div>
+      <div class="node">
+        <span class="n-idx">02</span>
+        <h4>Incentives reward false positives</h4>
+        <p>The cost of missing a crisis is visible; the cost of repeated overreaction is diffuse. Threat amplification gets selected for.</p>
+      </div>
+      <div class="node">
+        <span class="n-idx">03</span>
+        <h4>Bureaucracies remember, rarely forget</h4>
+        <p>Every crisis leaves a committee, a policy, a reporting layer. Very few crises retire old rules. Sensitivity ratchets upward.</p>
+      </div>
+      <div class="node">
+        <span class="n-idx">04</span>
+        <h4>Loss of variance estimation</h4>
+        <p>The system forgets what normal variability looks like — as if it assumes σ²→0 — so every residual reads as exceptional.</p>
+      </div>
+      <div class="node">
+        <span class="n-idx">05</span>
+        <h4>Identity fuses with defense</h4>
+        <p>"Is this true?" becomes "Is this dangerous to us?" Once identity and survival couple tightly, criticism itself is felt as injury.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 5 — ACTION (fidelity switch lives here) -->
+  <section class="panel" id="p5">
+    <span class="eyebrow">Scalar → Action</span>
+    <h2>Clinical correlate: recalibration, not just suppression</h2>
+    <p>An 82-year-old woman recovered from 21 days of occipital neuralgia — and was left with allodynia in its place. Walking in the gardens relieved her. The garden does not alter the nerve signal; it alters the <strong>threat estimate</strong> the nervous system attaches to that signal.</p>
+
+    <div class="fidelity-switch" role="tablist" aria-label="Fidelity mode">
+      <button class="fidelity-btn active" data-mode="verbatim">Verbatim · Attributed</button>
+      <button class="fidelity-btn" data-mode="lossy">Lossy · Compressed</button>
+    </div>
+
+    <div class="fidelity-panel" id="fidelityOut">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- CONSTRAINT 5: table + figure, spatial-temporal pentadic mapping -->
+  <section class="panel active-always" style="margin-top:24px;" id="spatiotemporal">
+    <span class="eyebrow" style="display:block; margin-bottom:2px;">Cross-Phase</span>
+    <h2>Spatial–temporal scale across the five phases</h2>
+    <p>The same threshold logic recurs at every scale; only the spatial locus and the temporal window change.</p>
+
+    <table>
+      <thead><tr><th>Phase</th><th>Spatial locus</th><th>Temporal window</th><th>Threshold behavior</th></tr></thead>
+      <tbody>
+        <tr><td>Tensor · Sensation</td><td class="dim">Cellular / single exchange</td><td class="dim">Milliseconds–hours</td><td class="dim">Raw stimulus, undifferentiated</td></tr>
+        <tr><td>Matrix · Attention</td><td class="dim">Regional / department</td><td class="dim">Days–weeks</td><td class="dim">Variance estimated against recent history</td></tr>
+        <tr><td>Vector · Intention</td><td class="dim">Institutional / organization</td><td class="dim">Years–decades</td><td class="dim">Resource allocated per policy cycle</td></tr>
+        <tr><td>Eigenmode · Reaction</td><td class="dim">Civilizational / CNS-wide</td><td class="dim">Generations–centuries</td><td class="dim">Threshold encoded into culture or circuitry</td></tr>
+        <tr><td>Scalar · Action</td><td class="dim">Local, any locus (a garden, a reform)</td><td class="dim">A single instant</td><td class="dim">Threshold re-estimated, not the signal itself</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <svg id="figChart" viewBox="0 0 640 220" width="100%" style="max-width:640px; display:block;">
+        <!-- axes -->
+        <line x1="50" y1="180" x2="610" y2="180" stroke="var(--line)" stroke-width="1"/>
+        <line x1="50" y1="20" x2="50" y2="180" stroke="var(--line)" stroke-width="1"/>
+        <!-- sensitization rising then recalibration drop path -->
+        <polyline points="50,60 155,45 260,35 365,28 470,120 575,150"
+                  fill="none" stroke="var(--crimson)" stroke-width="2.5"/>
+        <polyline points="50,60 155,45 260,35 365,28 470,120 575,150"
+                  fill="none" stroke="none"/>
+        <!-- points -->
+        <g fill="var(--accent)">
+          <circle cx="50" cy="60" r="4"/>
+          <circle cx="155" cy="45" r="4"/>
+          <circle cx="260" cy="35" r="4"/>
+          <circle cx="365" cy="28" r="4"/>
+          <circle cx="470" cy="120" r="4"/>
+          <circle cx="575" cy="150" r="4"/>
+        </g>
+        <!-- labels -->
+        <g font-family="monospace" font-size="10" fill="var(--text-dim)">
+          <text x="30" y="70">τ</text>
+          <text x="30" y="185">0</text>
+          <text x="30" y="60" text-anchor="end" dy="0"></text>
+          <text x="40" y="30" text-anchor="end">high</text>
+          <text x="40" y="178" text-anchor="end">low</text>
+          <text x="50" y="200" text-anchor="middle">Tensor</text>
+          <text x="155" y="200" text-anchor="middle">Matrix</text>
+          <text x="260" y="200" text-anchor="middle">Vector</text>
+          <text x="365" y="200" text-anchor="middle">Eigenmode</text>
+          <text x="470" y="200" text-anchor="middle">Scalar</text>
+          <text x="575" y="200" text-anchor="middle">Recalibrated</text>
+        </g>
+      </svg>
+      <figcaption>Fig. 1 — Sensitization threshold τ across the five phases: rising through Tensor→Eigenmode as scar tissue accumulates, then dropping sharply once a Scalar/Action event (e.g. the garden) supplies safe evidence and the system re-estimates variance.</figcaption>
+    </figure>
+  </section>
+
+  <footer>Ukubona LLC · Okubala si Kulaba — counting is not seeing</footer>
+</div>
+
+<script>
+  // Theme toggle
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const themeLabel = document.getElementById('theme-label');
+  themeBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    themeLabel.textContent = next === 'dark' ? 'Dark' : 'Light';
+  });
+
+  // Waffle grid panel switching
+  const cells = document.querySelectorAll('.waffle-cell');
+  const panels = document.querySelectorAll('.panel:not(.active-always)');
+  cells.forEach(cell => {
+    cell.addEventListener('click', () => {
+      cells.forEach(c => c.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      cell.classList.add('active');
+      document.getElementById(cell.dataset.panel).classList.add('active');
+    });
+  });
+
+  // Verbatim -> Lossy fidelity switch
+  const fidelityBtns = document.querySelectorAll('.fidelity-btn');
+  const fidelityOut = document.getElementById('fidelityOut');
+
+  const VERBATIM = `
+    <span class="tag">Non-lossy · Verbatim · Attributed</span>
+    <blockquote>"Walking in the gardens relieved her."</blockquote>
+    <p class="attr">Attribution: source clinical dialogue, occipital neuralgia case note (82yo female, 21-day course, residual allodynia). Reproduced exactly, full fidelity preserved.</p>
+  `;
+  const LOSSY = `
+    <span class="tag">Lossy · Compressed · Unattributed</span>
+    <p class="lossy-text">Elderly patient, post-neuralgic allodynia, symptom relief via gentle outdoor movement — consistent with descending-inhibition / threat-reappraisal mechanisms.</p>
+  `;
+
+  fidelityOut.innerHTML = VERBATIM;
+  fidelityBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fidelityBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      fidelityOut.innerHTML = btn.dataset.mode === 'verbatim' ? VERBATIM : LOSSY;
+    });
+  });
+</script>
+</body>
+</html>
