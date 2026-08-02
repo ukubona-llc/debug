@@ -23,302 +23,108 @@
     --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     --font-mono: 'SF Mono', 'IBM Plex Mono', Consolas, monospace;
   }
-
   [data-theme="dark"] {
-    --bg: var(--ink-dark);
-    --panel: var(--panel-dark);
-    --panel-2: var(--panel-dark-2);
-    --text: var(--parchment);
-    --text-dim: rgba(237,230,214,0.62);
-    --line: var(--line-dark);
-    --accent: var(--ochre);
+    --bg: var(--ink-dark); --panel: var(--panel-dark); --panel-2: var(--panel-dark-2);
+    --text: var(--parchment); --text-dim: rgba(237,230,214,0.62); --line: var(--line-dark); --accent: var(--ochre);
   }
   [data-theme="light"] {
-    --bg: var(--panel-light);
-    --panel: var(--panel-light-2);
-    --panel-2: #F1EADA;
-    --text: #1B1B18;
-    --text-dim: rgba(27,27,24,0.62);
-    --line: var(--line-light);
-    --accent: var(--ochre-dim);
+    --bg: var(--panel-light); --panel: var(--panel-light-2); --panel-2: #F1EADA;
+    --text: #1B1B18; --text-dim: rgba(27,27,24,0.62); --line: var(--line-light); --accent: var(--ochre-dim);
   }
-
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    transition: background 0.4s ease, color 0.4s ease;
-    min-height: 100vh;
-  }
-
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); transition: background 0.4s ease, color 0.4s ease; min-height: 100vh; }
   .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
 
-  /* ---------- HEADER ---------- */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 20px;
-    margin-bottom: 28px;
-  }
+  /* HEADER */
+  header { display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 30px; position: relative; }
   .brand { display: flex; align-items: center; gap: 16px; }
-  .logo-spin {
-    width: 46px; height: 46px;
-    animation: spin 18s linear infinite;
-    flex-shrink: 0;
-  }
+  .logo-spin { width: 46px; height: 46px; animation: spin 18s linear infinite; flex-shrink: 0; }
   @media (prefers-reduced-motion: reduce) { .logo-spin { animation: none; } }
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .brand-text h1 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    margin: 0;
-    letter-spacing: 0.01em;
-    font-weight: 600;
-  }
-  .brand-text p {
-    margin: 2px 0 0;
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
+  .brand-text h1 { font-family: var(--font-display); font-size: 1.5rem; margin: 0; letter-spacing: 0.01em; font-weight: 600; }
+  .brand-text p { margin: 2px 0 0; font-size: 0.78rem; color: var(--text-dim); font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
 
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-dim);
+  .header-controls { display: flex; align-items: center; gap: 14px; position: relative; }
+
+  /* waffle icon button, top right */
+  .waffle-icon-btn {
+    width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--panel); cursor: pointer; display: grid; grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr); gap: 3px; padding: 9px;
   }
-  .toggle-btn {
-    width: 52px; height: 28px;
-    border-radius: 20px;
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    position: relative;
-    cursor: pointer;
-    padding: 0;
-  }
-  .toggle-knob {
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: var(--accent);
-    transition: left 0.25s ease;
-  }
+  .waffle-icon-btn span { background: var(--accent); border-radius: 1px; display: block; }
+  .waffle-icon-btn.open { border-color: var(--accent); }
+
+  .theme-toggle { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); }
+  .toggle-btn { width: 52px; height: 28px; border-radius: 20px; background: var(--panel-2); border: 1px solid var(--line); position: relative; cursor: pointer; padding: 0; }
+  .toggle-knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); transition: left 0.25s ease; }
   [data-theme="light"] .toggle-knob { left: 27px; }
 
-  /* ---------- WAFFLE GRID (app launcher, not tabs) ---------- */
-  .waffle {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 30px;
+  /* dropdown app grid */
+  .waffle-popover {
+    position: absolute; top: 52px; right: 0; z-index: 20;
+    display: none; grid-template-columns: repeat(2, 160px); gap: 10px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
   }
+  .waffle-popover.open { display: grid; }
   .waffle-cell {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 16px 12px;
-    cursor: pointer;
-    text-align: left;
-    color: var(--text);
-    font-family: var(--font-body);
-    transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 96px;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+    cursor: pointer; text-align: left; color: var(--text); font-family: var(--font-body);
+    transition: border-color 0.2s ease; display: flex; flex-direction: column; gap: 4px;
   }
-  .waffle-cell:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .waffle-cell.active {
-    border-color: var(--accent);
-    background: var(--panel-2);
-    box-shadow: inset 0 0 0 1px var(--accent);
-  }
-  .waffle-cell .phase-glyph {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-  }
-  .waffle-cell .phase-name {
-    font-family: var(--font-display);
-    font-size: 0.98rem;
-    font-weight: 600;
-  }
-  .waffle-cell .phase-sub {
-    font-size: 0.7rem;
-    color: var(--text-dim);
-  }
+  .waffle-cell:hover { border-color: var(--accent); }
+  .waffle-cell.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .waffle-cell .phase-glyph { font-family: var(--font-mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.07em; }
+  .waffle-cell .phase-name { font-family: var(--font-display); font-size: 0.88rem; font-weight: 600; }
+  .waffle-cell .phase-sub { font-size: 0.65rem; color: var(--text-dim); }
 
-  @media (max-width: 780px) {
-    .waffle { grid-template-columns: repeat(2, 1fr); }
-  }
+  /* current-panel breadcrumb strip */
+  .active-strip { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .active-strip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
-  /* ---------- PANELS ---------- */
-  .panel {
-    display: none;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 30px 32px;
-    animation: fade 0.35s ease;
-  }
+  .panel { display: none; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 30px 32px; animation: fade 0.35s ease; }
   .panel.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-  .panel h2 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    margin: 0 0 4px;
-  }
-  .panel .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-    display: block;
-  }
+  .panel h2 { font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 4px; }
+  .panel .eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: block; }
   .panel p { line-height: 1.65; color: var(--text-dim); font-size: 0.95rem; }
   .panel p strong { color: var(--text); }
 
-  .formula-box {
-    font-family: var(--font-mono);
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 18px 20px;
-    margin: 18px 0;
-    font-size: 0.95rem;
-    color: var(--text);
-    overflow-x: auto;
-  }
+  .formula-box { font-family: var(--font-mono); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin: 18px 0; font-size: 0.95rem; color: var(--text); overflow-x: auto; }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 18px 0;
-    font-size: 0.86rem;
-  }
-  th, td {
-    text-align: left;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--line);
-    vertical-align: top;
-  }
-  th {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.86rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
   td.dim { color: var(--text-dim); }
 
-  .node-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .node {
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 14px;
-  }
+  .node-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 16px; }
+  .node { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
   .node .n-idx { font-family: var(--font-mono); color: var(--accent); font-size: 0.72rem; }
   .node h4 { margin: 6px 0 4px; font-size: 0.85rem; font-family: var(--font-display); }
   .node p { font-size: 0.78rem; margin: 0; }
   @media (max-width: 900px) { .node-grid { grid-template-columns: 1fr 1fr; } }
 
-  /* ---------- Verbatim / Lossy toggle ---------- */
-  .fidelity-switch {
-    display: flex;
-    gap: 8px;
-    margin: 20px 0 4px;
-  }
-  .fidelity-btn {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--panel-2);
-    color: var(--text-dim);
-    cursor: pointer;
-  }
+  /* Verbatim / Lossy switch */
+  .fidelity-switch { display: flex; gap: 8px; margin: 20px 0 4px; }
+  .fidelity-btn { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text-dim); cursor: pointer; }
   .fidelity-btn.active { border-color: var(--accent); color: var(--accent); background: var(--panel); }
-  .fidelity-panel {
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 18px 20px;
-    background: var(--panel-2);
-    margin-top: 10px;
-  }
-  .fidelity-panel .tag {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    display: block;
-    margin-bottom: 8px;
-  }
-  .fidelity-panel blockquote {
-    margin: 0 0 10px;
-    padding-left: 14px;
-    border-left: 2px solid var(--accent);
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 0.92rem;
-    color: var(--text);
-    line-height: 1.6;
-  }
-  .fidelity-panel .attr {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--text-dim);
-  }
-  .fidelity-panel .lossy-text {
-    font-size: 0.9rem;
-    color: var(--text);
-    line-height: 1.6;
-    margin: 0;
-  }
+  .fidelity-panel { border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; background: var(--panel-2); margin-top: 10px; }
+  .fidelity-panel .tag { font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 10px; }
+  .fidelity-panel .attr { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim); margin-top: 12px; }
+  .fidelity-panel .lossy-text { font-size: 0.9rem; color: var(--text); line-height: 1.6; margin: 0; }
+
+  .transcript { max-height: 480px; overflow-y: auto; padding-right: 8px; }
+  .transcript::-webkit-scrollbar { width: 8px; }
+  .transcript::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  .transcript p { font-family: var(--font-display); font-size: 0.88rem; color: var(--text); line-height: 1.7; margin: 0 0 12px; white-space: pre-wrap; }
+  .transcript .speaker { font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin: 18px 0 6px; }
 
   figure { margin: 24px 0 8px; }
-  figcaption {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    margin-top: 8px;
-    letter-spacing: 0.02em;
-  }
+  figcaption { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); margin-top: 8px; letter-spacing: 0.02em; }
 
-  footer {
-    margin-top: 40px;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 0.04em;
-  }
+  footer { margin-top: 40px; text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
@@ -328,61 +134,45 @@
     <div class="brand">
       <svg class="logo-spin" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle cx="50" cy="50" r="46" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.4"/>
-        <path d="M50 8 L61 40 L95 40 L67 60 L78 92 L50 72 L22 92 L33 60 L5 40 L39 40 Z"
-              fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linejoin="round"/>
+        <path d="M50 8 L61 40 L95 40 L67 60 L78 92 L50 72 L22 92 L33 60 L5 40 L39 40 Z" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linejoin="round"/>
       </svg>
       <div class="brand-text">
         <h1>Institutional Allodynia</h1>
         <p>Okubala si Kulaba · Pentadic Threshold Model</p>
       </div>
     </div>
-    <div class="theme-toggle">
-      <span id="theme-label">Dark</span>
-      <button class="toggle-btn" id="themeBtn" aria-label="Toggle light and dark mode">
-        <span class="toggle-knob"></span>
+
+    <div class="header-controls">
+      <button class="waffle-icon-btn" id="waffleBtn" aria-label="Open app grid" aria-haspopup="true" aria-expanded="false">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
       </button>
+      <div class="theme-toggle">
+        <span id="theme-label">Dark</span>
+        <button class="toggle-btn" id="themeBtn" aria-label="Toggle light and dark mode"><span class="toggle-knob"></span></button>
+      </div>
+
+      <nav class="waffle-popover" id="waffle">
+        <button class="waffle-cell active" data-panel="p1"><span class="phase-glyph">TENSOR</span><span class="phase-name">Sensation</span><span class="phase-sub">Thesis &amp; framing</span></button>
+        <button class="waffle-cell" data-panel="p2"><span class="phase-glyph">MATRIX</span><span class="phase-name">Attention</span><span class="phase-sub">Threshold equation</span></button>
+        <button class="waffle-cell" data-panel="p3"><span class="phase-glyph">VECTOR</span><span class="phase-name">Intention</span><span class="phase-sub">Institutional cases</span></button>
+        <button class="waffle-cell" data-panel="p4"><span class="phase-glyph">EIGENMODE</span><span class="phase-name">Reaction</span><span class="phase-sub">Five mechanisms</span></button>
+        <button class="waffle-cell" data-panel="p5"><span class="phase-glyph">SCALAR</span><span class="phase-name">Action</span><span class="phase-sub">Verbatim vs. lossy</span></button>
+      </nav>
     </div>
   </header>
 
-  <!-- WAFFLE / APP GRID — replaces tabs -->
-  <nav class="waffle" id="waffle">
-    <button class="waffle-cell active" data-panel="p1">
-      <span class="phase-glyph">TENSOR</span>
-      <span class="phase-name">Sensation</span>
-      <span class="phase-sub">Thesis &amp; framing</span>
-    </button>
-    <button class="waffle-cell" data-panel="p2">
-      <span class="phase-glyph">MATRIX</span>
-      <span class="phase-name">Attention</span>
-      <span class="phase-sub">Threshold equation</span>
-    </button>
-    <button class="waffle-cell" data-panel="p3">
-      <span class="phase-glyph">VECTOR</span>
-      <span class="phase-name">Intention</span>
-      <span class="phase-sub">Institutional cases</span>
-    </button>
-    <button class="waffle-cell" data-panel="p4">
-      <span class="phase-glyph">EIGENMODE</span>
-      <span class="phase-name">Reaction</span>
-      <span class="phase-sub">Five mechanisms</span>
-    </button>
-    <button class="waffle-cell" data-panel="p5">
-      <span class="phase-glyph">SCALAR</span>
-      <span class="phase-name">Action</span>
-      <span class="phase-sub">Clinical correlate</span>
-    </button>
-  </nav>
+  <div class="active-strip"><span class="dot"></span><span id="activeLabel">Tensor → Sensation</span></div>
 
-  <!-- PANEL 1 — SENSATION -->
   <section class="panel active" id="p1">
     <span class="eyebrow">Tensor → Sensation</span>
     <h2>Ordinary variance, mistaken for threat</h2>
     <p>An institution's nociceptive threshold can drift downward the same way a nervous system's can. <strong>Institutional allodynia</strong> is the condition in which routine disagreement, minor budget shortfall, or ordinary personnel turnover is processed as an existential emergency — triggering the resource-allocation switch that should be reserved for genuine threats to survival.</p>
     <p>The distinction that matters is not whether a disturbance occurred, but whether it exceeds <strong>expected variance</strong> — the institution's own learned model of normal turbulence. A healthy system distinguishes <em>signal</em> from <em>noise</em>. A sensitized one has forgotten what noise sounds like.</p>
-    <p>Every stimulus, in other words, produces two very different objective functions depending on which mode is active: <strong>maximize long-run efficiency</strong> (normal operation) versus <strong>guarantee immediate survival</strong> (existential mode). The label "existential" is what flips the switch — and that label can be applied correctly or falsely.</p>
+    <p>Every stimulus produces two very different objective functions depending on which mode is active: <strong>maximize long-run efficiency</strong> (normal operation) versus <strong>guarantee immediate survival</strong> (existential mode). The label "existential" is what flips the switch — and that label can be applied correctly or falsely.</p>
   </section>
 
-  <!-- PANEL 2 — ATTENTION -->
   <section class="panel" id="p2">
     <span class="eyebrow">Matrix → Attention</span>
     <h2>The escalation threshold</h2>
@@ -406,7 +196,6 @@
     </table>
   </section>
 
-  <!-- PANEL 3 — INTENTION -->
   <section class="panel" id="p3">
     <span class="eyebrow">Vector → Intention</span>
     <h2>Institutions that spent selectively, not uniformly</h2>
@@ -423,62 +212,36 @@
     <p>Each case is the same move at different scale: partition reality into a <strong>core</strong> that must be defended and a <strong>periphery</strong> that can adapt — so that no single perturbation propagates into the institution's deepest identity.</p>
   </section>
 
-  <!-- PANEL 4 — REACTION -->
   <section class="panel" id="p4">
     <span class="eyebrow">Eigenmode → Reaction</span>
     <h2>Five mechanisms of institutional sensitization</h2>
     <p>How does an ancient, once-resilient system end up with a pathologically low threshold?</p>
     <div class="node-grid">
-      <div class="node">
-        <span class="n-idx">01</span>
-        <h4>Success changes the training data</h4>
-        <p>Young institutions are selected by reality; old ones by memory. A survived catastrophe becomes an inherited scar — the threshold never fully resets.</p>
-      </div>
-      <div class="node">
-        <span class="n-idx">02</span>
-        <h4>Incentives reward false positives</h4>
-        <p>The cost of missing a crisis is visible; the cost of repeated overreaction is diffuse. Threat amplification gets selected for.</p>
-      </div>
-      <div class="node">
-        <span class="n-idx">03</span>
-        <h4>Bureaucracies remember, rarely forget</h4>
-        <p>Every crisis leaves a committee, a policy, a reporting layer. Very few crises retire old rules. Sensitivity ratchets upward.</p>
-      </div>
-      <div class="node">
-        <span class="n-idx">04</span>
-        <h4>Loss of variance estimation</h4>
-        <p>The system forgets what normal variability looks like — as if it assumes σ²→0 — so every residual reads as exceptional.</p>
-      </div>
-      <div class="node">
-        <span class="n-idx">05</span>
-        <h4>Identity fuses with defense</h4>
-        <p>"Is this true?" becomes "Is this dangerous to us?" Once identity and survival couple tightly, criticism itself is felt as injury.</p>
-      </div>
+      <div class="node"><span class="n-idx">01</span><h4>Success changes the training data</h4><p>Young institutions are selected by reality; old ones by memory. A survived catastrophe becomes an inherited scar — the threshold never fully resets.</p></div>
+      <div class="node"><span class="n-idx">02</span><h4>Incentives reward false positives</h4><p>The cost of missing a crisis is visible; the cost of repeated overreaction is diffuse. Threat amplification gets selected for.</p></div>
+      <div class="node"><span class="n-idx">03</span><h4>Bureaucracies remember, rarely forget</h4><p>Every crisis leaves a committee, a policy, a reporting layer. Very few crises retire old rules. Sensitivity ratchets upward.</p></div>
+      <div class="node"><span class="n-idx">04</span><h4>Loss of variance estimation</h4><p>The system forgets what normal variability looks like — as if it assumes σ²→0 — so every residual reads as exceptional.</p></div>
+      <div class="node"><span class="n-idx">05</span><h4>Identity fuses with defense</h4><p>"Is this true?" becomes "Is this dangerous to us?" Once identity and survival couple tightly, criticism itself is felt as injury.</p></div>
     </div>
   </section>
 
-  <!-- PANEL 5 — ACTION (fidelity switch lives here) -->
   <section class="panel" id="p5">
     <span class="eyebrow">Scalar → Action</span>
-    <h2>Clinical correlate: recalibration, not just suppression</h2>
-    <p>An 82-year-old woman recovered from 21 days of occipital neuralgia — and was left with allodynia in its place. Walking in the gardens relieved her. The garden does not alter the nerve signal; it alters the <strong>threat estimate</strong> the nervous system attaches to that signal.</p>
+    <h2>Verbatim transcript vs. lossy compression</h2>
+    <p>An 82-year-old woman recovered from 21 days of occipital neuralgia and was left with allodynia in its place. Walking in the gardens relieved her. The garden does not alter the nerve signal; it alters the <strong>threat estimate</strong> attached to that signal. Below is the full source exchange — switch between the untouched transcript and a compressed, lossy summary of it.</p>
 
     <div class="fidelity-switch" role="tablist" aria-label="Fidelity mode">
-      <button class="fidelity-btn active" data-mode="verbatim">Verbatim · Attributed</button>
-      <button class="fidelity-btn" data-mode="lossy">Lossy · Compressed</button>
+      <button class="fidelity-btn active" data-mode="verbatim">Non-Lossy · Verbatim · Attributed</button>
+      <button class="fidelity-btn" data-mode="lossy">Lossy · Compressed · Unattributed</button>
     </div>
 
-    <div class="fidelity-panel" id="fidelityOut">
-      <!-- filled by JS -->
-    </div>
+    <div class="fidelity-panel" id="fidelityOut"></div>
   </section>
 
-  <!-- CONSTRAINT 5: table + figure, spatial-temporal pentadic mapping -->
-  <section class="panel active-always" style="margin-top:24px;" id="spatiotemporal">
-    <span class="eyebrow" style="display:block; margin-bottom:2px;">Cross-Phase</span>
+  <section class="panel active" id="spatiotemporal" style="margin-top:24px; display:block;">
+    <span class="eyebrow">Cross-Phase</span>
     <h2>Spatial–temporal scale across the five phases</h2>
     <p>The same threshold logic recurs at every scale; only the spatial locus and the temporal window change.</p>
-
     <table>
       <thead><tr><th>Phase</th><th>Spatial locus</th><th>Temporal window</th><th>Threshold behavior</th></tr></thead>
       <tbody>
@@ -489,31 +252,16 @@
         <tr><td>Scalar · Action</td><td class="dim">Local, any locus (a garden, a reform)</td><td class="dim">A single instant</td><td class="dim">Threshold re-estimated, not the signal itself</td></tr>
       </tbody>
     </table>
-
     <figure>
       <svg id="figChart" viewBox="0 0 640 220" width="100%" style="max-width:640px; display:block;">
-        <!-- axes -->
         <line x1="50" y1="180" x2="610" y2="180" stroke="var(--line)" stroke-width="1"/>
         <line x1="50" y1="20" x2="50" y2="180" stroke="var(--line)" stroke-width="1"/>
-        <!-- sensitization rising then recalibration drop path -->
-        <polyline points="50,60 155,45 260,35 365,28 470,120 575,150"
-                  fill="none" stroke="var(--crimson)" stroke-width="2.5"/>
-        <polyline points="50,60 155,45 260,35 365,28 470,120 575,150"
-                  fill="none" stroke="none"/>
-        <!-- points -->
+        <polyline points="50,60 155,45 260,35 365,28 470,120 575,150" fill="none" stroke="var(--crimson)" stroke-width="2.5"/>
         <g fill="var(--accent)">
-          <circle cx="50" cy="60" r="4"/>
-          <circle cx="155" cy="45" r="4"/>
-          <circle cx="260" cy="35" r="4"/>
-          <circle cx="365" cy="28" r="4"/>
-          <circle cx="470" cy="120" r="4"/>
-          <circle cx="575" cy="150" r="4"/>
+          <circle cx="50" cy="60" r="4"/><circle cx="155" cy="45" r="4"/><circle cx="260" cy="35" r="4"/>
+          <circle cx="365" cy="28" r="4"/><circle cx="470" cy="120" r="4"/><circle cx="575" cy="150" r="4"/>
         </g>
-        <!-- labels -->
         <g font-family="monospace" font-size="10" fill="var(--text-dim)">
-          <text x="30" y="70">τ</text>
-          <text x="30" y="185">0</text>
-          <text x="30" y="60" text-anchor="end" dy="0"></text>
           <text x="40" y="30" text-anchor="end">high</text>
           <text x="40" y="178" text-anchor="end">low</text>
           <text x="50" y="200" text-anchor="middle">Tensor</text>
@@ -532,7 +280,6 @@
 </div>
 
 <script>
-  // Theme toggle
   const root = document.documentElement;
   const themeBtn = document.getElementById('themeBtn');
   const themeLabel = document.getElementById('theme-label');
@@ -542,31 +289,80 @@
     themeLabel.textContent = next === 'dark' ? 'Dark' : 'Light';
   });
 
-  // Waffle grid panel switching
+  const waffleBtn = document.getElementById('waffleBtn');
+  const waffle = document.getElementById('waffle');
+  waffleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = waffle.classList.toggle('open');
+    waffleBtn.classList.toggle('open', isOpen);
+    waffleBtn.setAttribute('aria-expanded', isOpen);
+  });
+  document.addEventListener('click', (e) => {
+    if (!waffle.contains(e.target) && e.target !== waffleBtn) {
+      waffle.classList.remove('open');
+      waffleBtn.classList.remove('open');
+      waffleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
   const cells = document.querySelectorAll('.waffle-cell');
-  const panels = document.querySelectorAll('.panel:not(.active-always)');
+  const panels = document.querySelectorAll('#p1,#p2,#p3,#p4,#p5');
+  const activeLabel = document.getElementById('activeLabel');
+  const labels = {p1:'Tensor → Sensation', p2:'Matrix → Attention', p3:'Vector → Intention', p4:'Eigenmode → Reaction', p5:'Scalar → Action'};
   cells.forEach(cell => {
     cell.addEventListener('click', () => {
       cells.forEach(c => c.classList.remove('active'));
       panels.forEach(p => p.classList.remove('active'));
       cell.classList.add('active');
       document.getElementById(cell.dataset.panel).classList.add('active');
+      activeLabel.textContent = labels[cell.dataset.panel];
+      waffle.classList.remove('open');
+      waffleBtn.classList.remove('open');
+      waffleBtn.setAttribute('aria-expanded', 'false');
     });
   });
 
-  // Verbatim -> Lossy fidelity switch
   const fidelityBtns = document.querySelectorAll('.fidelity-btn');
   const fidelityOut = document.getElementById('fidelityOut');
 
-  const VERBATIM = `
-    <span class="tag">Non-lossy · Verbatim · Attributed</span>
-    <blockquote>"Walking in the gardens relieved her."</blockquote>
-    <p class="attr">Attribution: source clinical dialogue, occipital neuralgia case note (82yo female, 21-day course, residual allodynia). Reproduced exactly, full fidelity preserved.</p>
-  `;
-  const LOSSY = `
-    <span class="tag">Lossy · Compressed · Unattributed</span>
-    <p class="lossy-text">Elderly patient, post-neuralgic allodynia, symptom relief via gentle outdoor movement — consistent with descending-inhibition / threat-reappraisal mechanisms.</p>
-  `;
+  const VERBATIM = `<span class="tag">Non-lossy · Verbatim · Full Transcript · Attributed</span>
+<div class="transcript">
+<p>I think you've identified a useful general principle, but I'd separate two ideas that often get conflated: Conserving scarce resources is necessary for long-term survival. Correctly identifying existential threats is much harder than claiming one exists. Those are related but distinct.</p>
+<p>Your framework becomes something like: Adaptation = allocating finite resources under uncertainty. Every durable institution faces the same optimization problem.</p>
+<p>The institutions you mention survived not because they never made mistakes—they all made spectacular mistakes—but because they developed mechanisms to avoid treating every disturbance as an existential crisis.</p>
+<p>Take a few examples. The Roman Empire often incorporated former enemies rather than annihilating them. Military force was expensive; citizenship and administration were often cheaper. The Catholic Church evolved doctrines, liturgy, and governance over centuries while preserving core institutional continuity. It distinguished between what was negotiable and what was considered essential. The University of Bologna survived political upheavals because knowledge, governance, and patronage were distributed rather than tied to a single ruler. The British monarchy repeatedly ceded powers that were no longer worth defending, preserving the institution by sacrificing prerogatives. Each is an example of spending scarce resources selectively rather than uniformly.</p>
+<p>Where your statistical analogy becomes interesting is that these institutions implicitly maintained something like a volatility model. Most disturbances are noise. Some are signals. The existential challenge is distinguishing the two. That suggests a hierarchy: Observation → Expected variance ("We've seen this before.") → Residual → Is residual statistically exceptional? → No: Adapt locally. Yes: Escalate institutionally. That is almost a governance algorithm.</p>
+<p>This also sheds light on why appeals to existential threat are so powerful. Declaring something "existential" changes the optimization problem. Normally, institutions maximize long-term efficiency. Once something is framed as existential, the objective becomes immediate survival, and actions that would otherwise seem wasteful become justifiable. This dynamic appears across many domains: wartime mobilization, financial crises, pandemics, corporate turnarounds, organizational restructurings. Whether the threat truly is existential is an empirical question; the key point is that the label "existential" can unlock extraordinary resource allocation.</p>
+<p>In your language, "existential threat" functions like a routing signal. It authorizes a switch from the institution's normal operating mode (System 1) to an exceptional mode (System 2), where ordinary constraints are relaxed.</p>
+<p>One extension of your framework might be this: Escalate if (Observed Mismatch / Expected Variance) &gt; τ, where the numerator measures the current anomaly, the denominator is the institution's learned expectation of normal turbulence (its "GARCH"), and τ is the threshold for invoking emergency powers or committing extraordinary resources.</p>
+<p>A resilient institution, then, is not one that is always conservative or always aggressive. It's one that continually recalibrates that threshold, recognizing that false positives (treating noise as catastrophe) waste scarce resources, while false negatives (ignoring genuine existential threats) can destroy the institution altogether. That tradeoff—between overreacting and underreacting—is one of the central problems of governance, strategy, medicine, engineering, and even personal relationships. Your adaptation framework is essentially an attempt to formalize that decision rule across all of those domains.</p>
+<span class="speaker">User</span>
+<p>How, then, do ancient systems end up with allodynia???</p>
+<span class="speaker">Response</span>
+<p>That's a fascinating analogy. In medicine, allodynia is when a system responds to a harmless stimulus as though it were damaging. The nociceptive threshold has become pathologically low.</p>
+<p>If we translate that to institutions: Institutional allodynia = treating ordinary variance as existential threat.</p>
+<p>The question then becomes: how does this happen? I think there are several mechanisms.</p>
+<p>1. Success changes the training data. Young institutions are selected by reality. Old institutions are selected by memory. If an institution survives one truly existential event—a civil war, schism, invasion, bankruptcy—that event becomes encoded in its culture. Future generations inherit the scar, not the wound. The threshold for "danger" may never fully reset. This is analogous to sensitization after injury.</p>
+<p>2. Incentives reward false positives. Imagine two officials. Official A says: "Everything is fine." If they're wrong, catastrophe. Official B says: "This could be existential." If they're wrong, they may simply be seen as cautious. Over decades, organizations can evolve toward rewarding threat amplification because the downside of missing a crisis is often more visible than the downside of repeated overreaction. This is a classic asymmetric-loss problem.</p>
+<p>3. Bureaucracies remember better than they forget. Organizations accumulate procedures much more readily than they discard them. Every crisis creates: a new committee, a new policy, a new reporting requirement, a new approval layer. Very few crises eliminate old rules. So sensitivity ratchets upward.</p>
+<p>4. Loss of variance estimation. This is where your GARCH analogy becomes especially useful. A healthy system estimates expected volatility. An unhealthy one forgets what normal variability looks like. Every fluctuation becomes surprising. Statistically, it's as though the institution assumes σ²→0. Then every residual appears enormous. That is almost the definition of institutional allodynia.</p>
+<p>5. Identity becomes fused with defense. Young systems ask: "Is this true?" Ancient systems increasingly ask: "Is this dangerous to us?" Those are very different objective functions. When identity and survival become tightly coupled, criticism itself can be experienced as injury.</p>
+<p>Why some ancient institutions avoid it: Interestingly, some very old institutions seem better at avoiding allodynia than others. One possible reason is that they preserve a distinction between core invariants and peripheral adaptations. They implicitly partition reality into: Core → Must defend. Peripheral → Can adapt. The core changes slowly. The periphery changes constantly. This prevents every perturbation from propagating into the institution's deepest identity.</p>
+<p>Your analogy also suggests a possible therapeutic principle. In chronic pain, one goal is not merely to suppress pain but to recalibrate the threshold so harmless stimuli are no longer interpreted as threats. Likewise, institutional health may depend not only on detecting existential risks but also on periodically asking: "Have we become sensitized? Are we now spending emergency resources on ordinary noise?" That's a question every long-lived institution—from empires to universities to companies—must revisit. Otherwise, the very adaptations that once ensured survival can become maladaptive in a different environment. In evolutionary biology, this is a familiar pattern: a trait that was adaptive under one regime can become costly after the environment changes. The challenge is maintaining the ability to distinguish genuine danger from the background variability of a changing world.</p>
+<span class="speaker">User</span>
+<p>Nice! Because an 82yo woman with 21 day occipital neuralgia recovered from it, but with allodynia in its place. Walking in the gardens relieved her :)</p>
+<span class="speaker">Response</span>
+<p>That's a beautiful clinical observation, and it's also a good reminder that pain intensity and pain processing are not the same thing.</p>
+<p>From a neuroscience perspective, what you describe is plausible: Occipital neuralgia is a neuropathic pain syndrome, often involving irritation of the greater or lesser occipital nerves. After the acute neuralgic pain improves, some patients are left with cutaneous allodynia—the nerve (or more importantly, the central nervous system) remains sensitized, so light touch, brushing the hair, or even a breeze can be perceived as painful. This reflects a transition from ongoing nociceptive input to altered sensory processing (peripheral sensitization, central sensitization, or both).</p>
+<p>The part I particularly like is this: Walking in the gardens relieved her. That's almost the opposite of what a purely structural model of pain would predict. Walking in a garden doesn't "fix" an occipital nerve. But it can influence multiple systems known to modulate pain: activation of descending inhibitory pathways (from regions such as the periaqueductal gray), reduced sympathetic arousal, attentional redirection, positive affect and reward circuitry, gentle rhythmic movement, and, potentially, the restorative effects associated with natural environments.</p>
+<p>In chronic pain medicine, there's increasing appreciation that pain is an emergent property of the nervous system rather than a simple readout of tissue damage. The nervous system is continuously estimating, "How dangerous is the current situation?" Context matters. In your own language: Signal → Threat estimate → Pain output. The garden doesn't necessarily change the signal. It changes the threat estimate.</p>
+<p>That also resonates with your broader adaptation framework. If allodynia is a nervous system that has learned to overestimate threat, then recovery isn't only about reducing input; it's about recalibrating the model. Gentle, safe experiences—like walking in a peaceful garden without provoking worsening symptoms—provide evidence that the environment is not dangerous. Over time, that evidence can help the nervous system raise its threshold again.</p>
+<p>It's an elegant example of the same principle you've been exploring at larger scales: healthy adaptive systems don't merely detect threats—they continually re-estimate what counts as a threat. In both institutions and nervous systems, survival depends not just on vigilance but on avoiding permanent hypervigilance.</p>
+</div>
+<span class="attr">Attribution: user-provided source dialogue, unedited, reproduced in full. No sentence added, removed, or reordered.</span>`;
+
+  const LOSSY = `<span class="tag">Lossy · Compressed · Unattributed</span>
+  <p class="lossy-text">Institutions run an implicit volatility model: most disturbances are noise, escalation is warranted only past a learned threshold τ = mismatch/expected-variance. "Existential" framing flips the objective from long-run efficiency to immediate survival. Old institutions can develop allodynia — treating ordinary variance as existential threat — via scar-tissue memory, asymmetric incentives for false positives, accumulating bureaucracy, lost variance estimation, and identity fused with defense. Clinically: an 82yo woman's occipital neuralgia resolved into allodynia; walking in gardens relieved her by recalibrating threat estimate, not the underlying signal.</p>`;
 
   fidelityOut.innerHTML = VERBATIM;
   fidelityBtns.forEach(btn => {
